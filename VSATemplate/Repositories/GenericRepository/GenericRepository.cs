@@ -1,28 +1,29 @@
 ﻿using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.EntityFrameworkCore;
 using VSATemplate.Entities.Base;
-using VSATemplate.Repositories.Base;
+using VSATemplate.Repositories.GenericRepository.Base;
+using VSATemplate.Data;
 
-namespace VSATemplate.Repositories
+namespace VSATemplate.Repositories.GenericRepository
 {
     public abstract class GenericRepository<T> : IGenericRepository<T> where T : BaseEntity
     {
-        private readonly DbContext _dbContext;
-        protected DbSet<T> Entities => _dbContext.Set<T>();
+        private readonly DataContext _dataContext;
+        protected DbSet<T> Entities => _dataContext.Set<T>();
 
-        public GenericRepository(DbContext dbContext)
+        public GenericRepository(DataContext dataContext)
         {
-            _dbContext = dbContext;
+            _dataContext = dataContext;
         }
 
         public async Task<T> Create(T entity)
         {
-            EntityEntry<T> insertedValue = await _dbContext.Set<T>().AddAsync(entity);
+            EntityEntry<T> insertedValue = await _dataContext.Set<T>().AddAsync(entity);
             return insertedValue.Entity;
         }
 
         public async Task<T?> GetById(int id)
-            => await _dbContext.Set<T>()
+            => await _dataContext.Set<T>()
                 .Where(x => x.IsDeleted == false && x.Id == id)
                 .FirstOrDefaultAsync();
 
@@ -33,13 +34,13 @@ namespace VSATemplate.Repositories
         }
 
         public IQueryable<T> GetAll()
-            => _dbContext.Set<T>().Where(x => x.IsDeleted == false);
+            => _dataContext.Set<T>().Where(x => x.IsDeleted == false);
 
         public IQueryable<T> GetAllEvenThoseSoftDeleted()
-            => _dbContext.Set<T>().Where(x => x.IsDeleted == false);
+            => _dataContext.Set<T>().Where(x => x.IsDeleted == false);
 
         public void Update(T entity)
-            => _dbContext.Set<T>().Update(entity);
+            => _dataContext.Set<T>().Update(entity);
 
         public async Task<bool> HardDelete(int id)
         {
@@ -48,7 +49,7 @@ namespace VSATemplate.Repositories
             if (entity is null)
                 return false;
 
-            _dbContext.Set<T>().Remove(entity);
+            _dataContext.Set<T>().Remove(entity);
             return true;
         }
 
@@ -62,7 +63,7 @@ namespace VSATemplate.Repositories
             entity.IsDeleted = true;
             entity.DeletedTimeUtc = DateTime.UtcNow;
 
-            _dbContext.Set<T>().Update(entity);
+            _dataContext.Set<T>().Update(entity);
 
             return true;
         }

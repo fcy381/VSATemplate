@@ -1,6 +1,6 @@
 ﻿using VSATemplate.Entities.Base;
 
-namespace VSATemplate.Repositories.Base
+namespace VSATemplate.Repositories.GenericRepository.Base
 {
     public interface IGenericRepository<T> where T : BaseEntity
     {
