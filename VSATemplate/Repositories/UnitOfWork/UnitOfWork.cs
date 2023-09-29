@@ -2,15 +2,19 @@
 using System.Transactions;
 using VSATemplate.Data;
 using VSATemplate.Repositories.UnitOfWork.Base;
+using static VSATemplate.Features.Students.CreateStudent;
 
 namespace VSATemplate.Repositories.UnitOfWork
 {
     public class UnitOfWork: IUnitOfWork
     {
+        public IStudentRepository StudentRepository { get; }
+
         private readonly DataContext _dataContext;
 
-        public UnitOfWork(DataContext dataContext)
+        public UnitOfWork(DataContext dataContext, IStudentRepository studentRepository)
         {
+            StudentRepository = studentRepository;
             _dataContext = dataContext;
         }
 
