@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using VSATemplate.Entities;
+using VSATemplate.Features.Common.Entities;
 
-namespace VSATemplate.Data
+namespace VSATemplate.Features.Common.Data
 {
     public class DataContext : DbContext
     {

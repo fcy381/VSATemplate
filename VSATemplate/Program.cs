@@ -1,9 +1,12 @@
 using Microsoft.EntityFrameworkCore;
-using VSATemplate.Data;
-using VSATemplate.Repositories.UnitOfWork.Base;
-using VSATemplate.Repositories.UnitOfWork;
-using static VSATemplate.Features.Students.CreateStudent;
-using VSATemplate.Features.Students;
+using static VSATemplate.Features.Students.Commands.CreateStudent;
+using VSATemplate.Features.Students.Commands;
+using VSATemplate.Features.Students.Queries;
+using VSATemplate.Features.Common.Repositories.UnitOfWork;
+using VSATemplate.Features.Common.Repositories.UnitOfWork.Base;
+using VSATemplate.Features.Students.Common.Repository;
+using VSATemplate.Features.Students.Common.Repository.Base;
+using VSATemplate.Features.Common.Data;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -31,6 +34,7 @@ if (app.Environment.IsDevelopment())
 }
 
 CreateStudent.MapEndpoints(app);
+GetStudent.MapEndpoints(app);
 
 app.UseHttpsRedirection();
 

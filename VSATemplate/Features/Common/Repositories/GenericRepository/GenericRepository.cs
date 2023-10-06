@@ -1,10 +1,10 @@
 ﻿using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.EntityFrameworkCore;
-using VSATemplate.Entities.Base;
-using VSATemplate.Repositories.GenericRepository.Base;
-using VSATemplate.Data;
+using VSATemplate.Features.Common.Entities.Base;
+using VSATemplate.Features.Common.Data;
+using VSATemplate.Features.Common.Repositories.GenericRepository.Base;
 
-namespace VSATemplate.Repositories.GenericRepository
+namespace VSATemplate.Features.Common.Repositories.GenericRepository
 {
     public abstract class GenericRepository<T> : IGenericRepository<T> where T : BaseEntity
     {
@@ -22,10 +22,15 @@ namespace VSATemplate.Repositories.GenericRepository
             return insertedValue.Entity;
         }
 
-        public async Task<T?> GetById(int id)
-            => await _dataContext.Set<T>()
-                .Where(x => x.IsDeleted == false && x.Id == id)
-                .FirstOrDefaultAsync();
+        public async Task<T?> GetById(params object[] keys)
+        {
+            var entity = await _dataContext.Set<T>().FindAsync(keys);
+
+            if (entity != null)
+                if (entity.IsDeleted == false) return entity;
+
+            return null;
+        }
 
         public async Task<bool?> WasSoftDeleted(T entity)
         {
@@ -42,7 +47,7 @@ namespace VSATemplate.Repositories.GenericRepository
         public void Update(T entity)
             => _dataContext.Set<T>().Update(entity);
 
-        public async Task<bool> HardDelete(int id)
+        public async Task<bool> HardDelete(Guid id)
         {
             T? entity = await GetById(id);
 
@@ -53,7 +58,7 @@ namespace VSATemplate.Repositories.GenericRepository
             return true;
         }
 
-        public async Task<bool> SoftDelete(int id)
+        public async Task<bool> SoftDelete(Guid id)
         {
             T? entity = await GetById(id);
 
