@@ -32,7 +32,6 @@ namespace VSATemplate.Features.Students.Queries
                     return _mapper.Map<StudentGetDTO>(student);
                 }
                 else return null;
-
             }
         }
 

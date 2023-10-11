@@ -7,5 +7,10 @@
         public bool? IsDeleted { get; set; }
 
         public DateTime? DeletedTimeUtc { get; set; }
+
+        public BaseEntity()
+        {
+          IsDeleted = false;
+        }
     }
 }

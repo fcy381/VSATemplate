@@ -40,8 +40,7 @@ namespace VSATemplate.Features.Students.Commands
 
                 var studentCreated = mapper.Map<StudentGetDTO>(student);
 
-                return Results.CreatedAtRoute("GetStudentById", new { id = student.Id }, studentCreated);
-                
+                return Results.CreatedAtRoute("GetStudentById", new { id = student.Id }, studentCreated);                
             }).WithName("CreateStudent");
         }
     }

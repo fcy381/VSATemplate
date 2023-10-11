@@ -22,14 +22,18 @@
 
   <ItemGroup>
     <Folder Include="Features\AcademicAreas\Commands\" />
+    <Folder Include="Features\AcademicAreas\Common\Repositories\Base\" />
     <Folder Include="Features\AcademicAreas\Queries\" />
     <Folder Include="Features\Courses\Commands\" />
     <Folder Include="Features\Courses\Queries\" />
     <Folder Include="Features\Inscriptions\Commands\" />
+    <Folder Include="Features\Inscriptions\Common\Repositories\Base\" />
     <Folder Include="Features\Inscriptions\Queries\" />
     <Folder Include="Features\OpenCourses\Commands\" />
+    <Folder Include="Features\OpenCourses\Common\Repositories\Base\" />
     <Folder Include="Features\OpenCourses\Queries\" />
     <Folder Include="Features\ProgramContents\Commands\" />
+    <Folder Include="Features\ProgramContents\Common\Repositories\Base\" />
     <Folder Include="Features\ProgramContents\Queries\" />
     <Folder Include="Features\Teachers\Commands\" />
     <Folder Include="Features\Teachers\Queries\" />
