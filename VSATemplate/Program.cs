@@ -38,10 +38,13 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-CreateStudent.MapEndpoints(app);
-GetStudent.MapEndpoints(app);
-GetAllStudents.MapEnpoints(app);
-CreateFirstStudents.MapEndpoints(app);
+CreateStudent.MapEndpoint(app);
+GetStudent.MapEndpoint(app);
+GetAllStudents.MapEnpoint(app);
+CreateFirstStudents.MapEndpoint(app);
+HardDeleteStudent.MapEnpoint(app);
+SoftDeleteStudent.MapEndpoint(app);
+UpdateStudent.MapEndpoint(app);
 
 app.UseHttpsRedirection();
 

@@ -8,12 +8,12 @@ namespace VSATemplate.Features.Students.Commands
 {
     public static class CreateStudent
     {
-        public class Command : StudentPostDTO, IRequest<Student> { }
+        public class CreateCommand : StudentPostDTO, IRequest<IResult> { }
 
-        internal sealed class Handler : IRequestHandler<Command, Student>
-        {
-            private readonly IUnitOfWork _unitOfWork;
+        internal sealed class Handler : IRequestHandler<CreateCommand, IResult>
+        {            
             private readonly IMapper _mapper;
+            private readonly IUnitOfWork _unitOfWork;
 
             public Handler(IUnitOfWork unitOFWork, IMapper mapper)
             {
@@ -21,26 +21,25 @@ namespace VSATemplate.Features.Students.Commands
                 _unitOfWork = unitOFWork;
             }
 
-            public async Task<Student> Handle(Command request, CancellationToken cancellationToken)
+            public async Task<IResult> Handle(CreateCommand request, CancellationToken cancellationToken)
             {
                 var student = _mapper.Map<Student>(request);
 
                 await _unitOfWork.StudentRepository.Create(student);
-                _ = await _unitOfWork.Commit();
+                
+                await _unitOfWork.Commit();
 
-                return student;
+                var studentCreated = _mapper.Map<StudentGetDTO>(student);
+
+                return Results.CreatedAtRoute("GetStudentById", new { id = student.Id }, studentCreated);
             }
         }
 
-        public static void MapEndpoints(this IEndpointRouteBuilder app)
+        public static void MapEndpoint(this IEndpointRouteBuilder app)
         {
-            app.MapPost("/api/v1.0/student/", async (Command command, ISender sender, IMapper mapper) =>
+            app.MapPost("/api/v1.0/student/", async (CreateCommand createCommand, ISender sender) =>
             {
-                var student = await sender.Send(command);
-
-                var studentCreated = mapper.Map<StudentGetDTO>(student);
-
-                return Results.CreatedAtRoute("GetStudentById", new { id = student.Id }, studentCreated);                
+                return await sender.Send(createCommand);                
             }).WithName("CreateStudent");
         }
     }

@@ -41,7 +41,7 @@ namespace VSATemplate.Features.Students.Commands
             }
         }
 
-        public static void MapEndpoints(this IEndpointRouteBuilder app)
+        public static void MapEndpoint(this IEndpointRouteBuilder app)
         {
             app.MapPost("/api/v1.0/student/initialize", async (ISender sender) => 
             {

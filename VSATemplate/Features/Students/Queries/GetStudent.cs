@@ -35,7 +35,7 @@ namespace VSATemplate.Features.Students.Queries
             }
         }
 
-        public static void MapEndpoints(this IEndpointRouteBuilder app)
+        public static void MapEndpoint(this IEndpointRouteBuilder app)
         {
             app.MapGet("/api/v1.0/student/{id}", async (Guid id, ISender sender) =>
             {

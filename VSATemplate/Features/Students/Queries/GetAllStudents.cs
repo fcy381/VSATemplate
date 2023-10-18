@@ -46,7 +46,7 @@ namespace VSATemplate.Features.Students.Queries
 
         }
 
-        public static void MapEnpoints(this IEndpointRouteBuilder app) 
+        public static void MapEnpoint(this IEndpointRouteBuilder app) 
         {
             app.MapGet("/api/v1.0/student/all", async (ISender sender) => 
             { 

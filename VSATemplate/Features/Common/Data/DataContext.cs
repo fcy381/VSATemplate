@@ -7,6 +7,12 @@ namespace VSATemplate.Features.Common.Data
     {
         public DataContext(DbContextOptions<DataContext> options) : base(options) { }
 
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<Student>()
+                .HasQueryFilter(a => !a.IsDeleted);
+        }
+
         public DbSet<Course> Courses { get; set; }
 
         public DbSet<Student> Students { get; set; }

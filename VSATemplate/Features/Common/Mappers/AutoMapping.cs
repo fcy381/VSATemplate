@@ -2,6 +2,7 @@
 using VSATemplate.Features.Common.Entities;
 using VSATemplate.Features.Students.Common.Contracts;
 using static VSATemplate.Features.Students.Commands.CreateStudent;
+using static VSATemplate.Features.Students.Commands.UpdateStudent;
 
 namespace VSATemplate.Features.Common.Mappers
 {
@@ -9,9 +10,12 @@ namespace VSATemplate.Features.Common.Mappers
     {
         public AutoMapping()
         {
-            CreateMap<Command, Student>()
+            CreateMap<CreateCommand, Student>()
                 .ForMember(dest => dest.IsDeleted, opt => opt.MapFrom(src => false))
                 .ForMember(dest => dest.DeletedTimeUtc, opt => opt.MapFrom(src => DateTime.MinValue)); // ¿Es correcto?
+
+            CreateMap<UpdateCommand, Student>()                
+                .ForMember(dest => dest.DeletedTimeUtc, opt => opt.MapFrom(src => DateTime.UtcNow)); // ¿Es correcto?
 
             CreateMap<Student, StudentGetDTO>();
         }
