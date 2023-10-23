@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using FluentValidation;
 using MediatR;
 using System.Security.Cryptography.X509Certificates;
 using VSATemplate.Features.Common.Entities;
@@ -8,12 +9,20 @@ namespace VSATemplate.Features.Students.Commands
 {
     public static class SoftDeleteStudent
     {
-        public class Command : IRequest
+        public class SoftDeleteCommand : IRequest
         {
             public Guid Id { get; set; }
         }
 
-        internal sealed class Handler : IRequestHandler<Command>
+        public class Validator : AbstractValidator<SoftDeleteCommand> 
+        {
+            public Validator()
+            {
+                RuleFor(x => x.Id).NotEmpty().NotNull();
+            }
+        }
+
+        internal sealed class Handler : IRequestHandler<SoftDeleteCommand>
         {
             private readonly IUnitOfWork _unitOfWork;
 
@@ -22,7 +31,7 @@ namespace VSATemplate.Features.Students.Commands
                 _unitOfWork = unitOfWork;
             }
 
-            public async Task Handle(Command command, CancellationToken cancellationToken)             
+            public async Task Handle(SoftDeleteCommand command, CancellationToken cancellationToken)             
             {
                 await _unitOfWork.StudentRepository.SoftDelete(command.Id);
 
@@ -32,9 +41,14 @@ namespace VSATemplate.Features.Students.Commands
 
         public static void MapEndpoint(IEndpointRouteBuilder app) 
         {
-            app.MapDelete("api/v1.0/student/soft/{id}", (Guid id, ISender sender) => 
+            app.MapDelete("api/v1.0/student/soft/{id}", (Guid id, ISender sender, IValidator<SoftDeleteCommand> validator) => 
             {
-                var command = new Command { Id = id };  
+                var command = new SoftDeleteCommand { Id = id };  
+
+                var validationResult = validator.Validate(command);
+
+                if (!validationResult.IsValid)
+                    return Results.ValidationProblem(validationResult.ToDictionary());
 
                 _ = sender.Send(command);
 

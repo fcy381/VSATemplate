@@ -8,9 +8,9 @@ namespace VSATemplate.Features.Students.Commands
 {
     public static class CreateFirstStudents
     {
-        public class Command : IRequest { }
+        public class CreateFirstCommand : IRequest { }
 
-        internal sealed class Handler: IRequestHandler<Command>
+        internal sealed class Handler: IRequestHandler<CreateFirstCommand>
         {
             private readonly IUnitOfWork _unitOfWork;
 
@@ -19,7 +19,7 @@ namespace VSATemplate.Features.Students.Commands
                 _unitOfWork = unitOFWork;
             }
 
-            public async Task Handle(Command request, CancellationToken cancellationToken)
+            public async Task Handle(CreateFirstCommand request, CancellationToken cancellationToken)
             {
                 var firstStudent = new Student
                 {
@@ -45,7 +45,7 @@ namespace VSATemplate.Features.Students.Commands
         {
             app.MapPost("/api/v1.0/student/initialize", async (ISender sender) => 
             {
-                var command = new Command();
+                var command = new CreateFirstCommand();
 
                 await sender.Send(command);
 

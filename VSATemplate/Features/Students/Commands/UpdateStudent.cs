@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using FluentValidation;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using VSATemplate.Features.Common.Entities;
@@ -11,6 +12,16 @@ namespace VSATemplate.Features.Students.Commands
     public static class UpdateStudent
     {
         public class UpdateCommand : StudentUpdateDTO, IRequest<IResult> { }
+
+        public class Validator : AbstractValidator<UpdateCommand>
+        {
+            public Validator()
+            {
+                RuleFor(x => x.Name).NotEmpty().MaximumLength(10);
+                RuleFor(x => x.Email).NotEmpty().MaximumLength(5);
+                RuleFor(x => x.Phone).NotEmpty().MaximumLength(15);
+            }
+        }
 
         internal sealed class Handler : IRequestHandler<UpdateCommand, IResult>
         {
@@ -41,8 +52,13 @@ namespace VSATemplate.Features.Students.Commands
 
         public static void MapEndpoint(this IEndpointRouteBuilder app) 
         {
-            app.MapPut("api/v1.0/student/{id}", async (Guid id,[FromBody] UpdateCommand UpdateCommand, ISender sender) =>
+            app.MapPut("api/v1.0/student/{id}", async (Guid id,[FromBody] UpdateCommand UpdateCommand, ISender sender, IValidator<UpdateCommand> validator) =>
             {
+                var validationResult = validator.Validate(UpdateCommand);
+
+                if (!validationResult.IsValid)                
+                    return Results.ValidationProblem(validationResult.ToDictionary());                
+
                 if (id != UpdateCommand.Id)
                     return Results.BadRequest();
 

@@ -9,9 +9,9 @@ namespace VSATemplate.Features.Students.Queries
 {
     public static class GetAllStudents
     {
-        public class Query : IRequest<List<StudentGetDTO>> {}
+        public class GetAllQuery : IRequest<List<StudentGetDTO>> {}
 
-        internal sealed class Handler : IRequestHandler<Query, List<StudentGetDTO>>
+        internal sealed class Handler : IRequestHandler<GetAllQuery, List<StudentGetDTO>>
         {
             private readonly IUnitOfWork _unitOfWork;
             private readonly IMapper _mapper;
@@ -22,7 +22,7 @@ namespace VSATemplate.Features.Students.Queries
                 _unitOfWork = unitOFWork;
             }
 
-            public async Task<List<StudentGetDTO>> Handle(Query request, CancellationToken cancellationToken)
+            public async Task<List<StudentGetDTO>> Handle(GetAllQuery request, CancellationToken cancellationToken)
             {
                 var listStudents = _unitOfWork.StudentRepository.GetAll();
 
@@ -50,7 +50,7 @@ namespace VSATemplate.Features.Students.Queries
         {
             app.MapGet("/api/v1.0/student/all", async (ISender sender) => 
             { 
-                var query = new Query();
+                var query = new GetAllQuery();
 
                 var studentListDTO = await sender.Send(query);
 
