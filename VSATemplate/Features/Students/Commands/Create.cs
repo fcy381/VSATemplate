@@ -7,17 +7,17 @@ using FluentValidation;
 
 namespace VSATemplate.Features.Students.Commands
 {
-    public static class CreateStudent
+    public static class Create
     {
-        public class CreateCommand : StudentPostDTO, IRequest<IResult> { }
+        public class CreateCommand : PostDTO, IRequest<IResult> { }
 
         public class Validator: AbstractValidator<CreateCommand>
         {
             public Validator()
             {
-                RuleFor(x => x.Name).NotEmpty().MaximumLength(10);
-                RuleFor(x => x.Email).NotEmpty().MaximumLength(5);
-                RuleFor(x => x.Phone).NotEmpty().MaximumLength(15);
+                RuleFor(x => x.Name).NotEmpty().MaximumLength(30);
+                RuleFor(x => x.Email).NotEmpty().MaximumLength(30);
+                RuleFor(x => x.Phone).NotEmpty().MaximumLength(12);
             }
         }
 
@@ -40,7 +40,7 @@ namespace VSATemplate.Features.Students.Commands
                 
                 await _unitOfWork.Commit();
 
-                var studentCreated = _mapper.Map<StudentGetDTO>(student);
+                var studentCreated = _mapper.Map<GetDTO>(student);
 
                 return Results.CreatedAtRoute("GetStudentById", new { id = student.Id }, studentCreated);
             }

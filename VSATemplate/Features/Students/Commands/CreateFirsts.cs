@@ -6,7 +6,7 @@ using VSATemplate.Features.Common.Repositories.UnitOfWork.Base;
 
 namespace VSATemplate.Features.Students.Commands
 {
-    public static class CreateFirstStudents
+    public static class CreateFirsts
     {
         public class CreateFirstCommand : IRequest { }
 

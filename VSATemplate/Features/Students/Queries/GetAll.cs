@@ -7,11 +7,11 @@ using VSATemplate.Features.Students.Common.Contracts;
 
 namespace VSATemplate.Features.Students.Queries
 {
-    public static class GetAllStudents
+    public static class GetAll
     {
-        public class GetAllQuery : IRequest<List<StudentGetDTO>> {}
+        public class GetAllQuery : IRequest<List<GetDTO>> {}
 
-        internal sealed class Handler : IRequestHandler<GetAllQuery, List<StudentGetDTO>>
+        internal sealed class Handler : IRequestHandler<GetAllQuery, List<GetDTO>>
         {
             private readonly IUnitOfWork _unitOfWork;
             private readonly IMapper _mapper;
@@ -22,19 +22,19 @@ namespace VSATemplate.Features.Students.Queries
                 _unitOfWork = unitOFWork;
             }
 
-            public async Task<List<StudentGetDTO>> Handle(GetAllQuery request, CancellationToken cancellationToken)
+            public async Task<List<GetDTO>> Handle(GetAllQuery request, CancellationToken cancellationToken)
             {
                 var listStudents = _unitOfWork.StudentRepository.GetAll();
 
                 if (listStudents != null)
                 {
-                    var studentsListDTO = new List<StudentGetDTO>();
+                    var studentsListDTO = new List<GetDTO>();
 
                     foreach (var stdt in listStudents)
                     {
-                        var studentGetDTO = new StudentGetDTO();
+                        var studentGetDTO = new GetDTO();
 
-                        studentGetDTO = _mapper.Map<StudentGetDTO>(stdt);
+                        studentGetDTO = _mapper.Map<GetDTO>(stdt);
 
                         studentsListDTO.Add(studentGetDTO);
                     }

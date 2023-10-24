@@ -6,11 +6,12 @@
 
         public bool IsDeleted { get; set; }
 
-        public DateTime? DeletedTimeUtc { get; set; }
+        public DateTime DeletedTimeUtc { get; set; }
 
-        public BaseEntity()
+        protected BaseEntity()
         {
-          IsDeleted = false;
+            IsDeleted = false;
+            DeletedTimeUtc = DateTime.MinValue;
         }
     }
 }

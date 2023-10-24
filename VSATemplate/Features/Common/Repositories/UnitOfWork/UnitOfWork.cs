@@ -5,7 +5,7 @@ using VSATemplate.Features.Common.Repositories.UnitOfWork.Base;
 using VSATemplate.Features.Courses.Common.Repository.Base;
 using VSATemplate.Features.Students.Common.Repository.Base;
 using VSATemplate.Features.Teachers.Common.Repository.Base;
-using static VSATemplate.Features.Students.Commands.CreateStudent;
+using static VSATemplate.Features.Students.Commands.Create;
 
 namespace VSATemplate.Features.Common.Repositories.UnitOfWork
 {

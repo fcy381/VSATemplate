@@ -9,17 +9,26 @@ using VSATemplate.Features.Students.Common.Contracts;
 
 namespace VSATemplate.Features.Students.Commands
 {
-    public static class UpdateStudent
+    public static class Update
     {
-        public class UpdateCommand : StudentUpdateDTO, IRequest<IResult> { }
+        public class UpdateCommand : UpdateDTO, IRequest<IResult> { }
 
         public class Validator : AbstractValidator<UpdateCommand>
         {
             public Validator()
             {
+                RuleFor(x => x.Id)
+                    .NotEmpty()
+                    .NotNull()
+                    .Must(BeAValidGuid).WithMessage("The given Id is not of type Guid.");                   
                 RuleFor(x => x.Name).NotEmpty().MaximumLength(10);
                 RuleFor(x => x.Email).NotEmpty().MaximumLength(5);
                 RuleFor(x => x.Phone).NotEmpty().MaximumLength(15);
+            }
+
+            private bool BeAValidGuid(string guid)
+            {
+                return Guid.TryParse(guid.ToString(), out _);
             }
         }
 
@@ -52,16 +61,13 @@ namespace VSATemplate.Features.Students.Commands
 
         public static void MapEndpoint(this IEndpointRouteBuilder app) 
         {
-            app.MapPut("api/v1.0/student/{id}", async (Guid id,[FromBody] UpdateCommand UpdateCommand, ISender sender, IValidator<UpdateCommand> validator) =>
+            app.MapPut("api/v1.0/student", async ([FromBody] UpdateCommand UpdateCommand, ISender sender, IValidator<UpdateCommand> validator) =>
             {
                 var validationResult = validator.Validate(UpdateCommand);
 
                 if (!validationResult.IsValid)                
                     return Results.ValidationProblem(validationResult.ToDictionary());                
-
-                if (id != UpdateCommand.Id)
-                    return Results.BadRequest();
-
+                
                 return await sender.Send(UpdateCommand);
             }).WithName("UpdateStudent");
         }

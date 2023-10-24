@@ -11,7 +11,7 @@ namespace VSATemplate.Features.Common.Repositories.GenericRepository
         private readonly DataContext _dataContext;
         protected DbSet<T> Entities => _dataContext.Set<T>();
 
-        public GenericRepository(DataContext dataContext)
+        protected GenericRepository(DataContext dataContext)
         {
             _dataContext = dataContext;
         }
@@ -26,23 +26,24 @@ namespace VSATemplate.Features.Common.Repositories.GenericRepository
         {
             var entity = await _dataContext.Set<T>().FindAsync(keys);
 
-            if (entity != null)
-                if (entity.IsDeleted == false) return entity;
-
-            return null;
+            if (entity == null) return null;
+            else return entity;
         }
 
-        public async Task<bool?> WasSoftDeleted(T entity)
+        public async Task<bool?> WasSoftDeleted(Guid id)
         {
-            if (entity != null) { return entity.IsDeleted; }
-            else { return null; };
+            T? entity = await GetById(id);
+
+            if (entity is null)
+                return null;
+            else return entity.IsDeleted; 
         }
 
         public IQueryable<T> GetAll()
-            => _dataContext.Set<T>().Where(x => x.IsDeleted == false);
+            => _dataContext.Set<T>();
 
         public IQueryable<T> GetAllEvenThoseSoftDeleted()
-            => _dataContext.Set<T>().Where(x => x.IsDeleted == false);
+            => _dataContext.Set<T>();
 
         public void Update(T entity)
             => _dataContext.Set<T>().Update(entity);
@@ -69,6 +70,19 @@ namespace VSATemplate.Features.Common.Repositories.GenericRepository
             entity.DeletedTimeUtc = DateTime.UtcNow;
 
             _dataContext.Set<T>().Update(entity);
+
+            return true;
+        }
+
+        public async Task<bool> Rescue(Guid id)
+        {
+            T? entity = await GetById(id);
+
+            if (entity is null)
+                return false;
+
+            entity.IsDeleted = false;
+            entity.DeletedTimeUtc = DateTime.MinValue;
 
             return true;
         }

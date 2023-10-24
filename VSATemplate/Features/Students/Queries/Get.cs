@@ -7,9 +7,9 @@ using FluentValidation;
 
 namespace VSATemplate.Features.Students.Queries
 {
-    public static class GetStudent
+    public static class Get
     {
-        public class GetQuery : IRequest<StudentGetDTO>
+        public class GetQuery : IRequest<GetDTO>
         {
             public Guid Id { get; set; }
         }
@@ -19,9 +19,9 @@ namespace VSATemplate.Features.Students.Queries
             public Validator()
             {
                 RuleFor(Id => Id)
-                    .Must(BeAValidGuid).WithMessage("The given Id is not of type Guid.");
-                    //.Must(id => id != default(Guid)).WithMessage("El GUID no debe ser el valor por defecto.");
-                // Guid x defecto ---> 00000000-0000-0000-0000-000000000000
+                    .NotEmpty()
+                    .NotNull()
+                    .Must(BeAValidGuid).WithMessage("The given Id is not of type Guid.");                    
             }
 
             private bool BeAValidGuid(string guid)
@@ -30,7 +30,7 @@ namespace VSATemplate.Features.Students.Queries
             }
         }
 
-        internal sealed class Handler : IRequestHandler<GetQuery, StudentGetDTO>
+        internal sealed class Handler : IRequestHandler<GetQuery, GetDTO>
         {
             private readonly IUnitOfWork _unitOfWork;
             private readonly IMapper _mapper;
@@ -41,13 +41,13 @@ namespace VSATemplate.Features.Students.Queries
                 _unitOfWork = unitOFWork;
             }
 
-            public async Task<StudentGetDTO> Handle(GetQuery request, CancellationToken cancellationToken)
+            public async Task<GetDTO> Handle(GetQuery request, CancellationToken cancellationToken)
             {
                 var student = await _unitOfWork.StudentRepository.GetById(request.Id);
 
                 if (student != null)
                 {
-                    return _mapper.Map<StudentGetDTO>(student);
+                    return _mapper.Map<GetDTO>(student);
                 }
                 else return null;
             }

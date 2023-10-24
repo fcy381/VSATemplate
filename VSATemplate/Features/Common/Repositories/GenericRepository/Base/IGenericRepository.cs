@@ -8,7 +8,7 @@ namespace VSATemplate.Features.Common.Repositories.GenericRepository.Base
 
         Task<T?> GetById(params object[] keys);
 
-        Task<bool?> WasSoftDeleted(T entity);
+        Task<bool?> WasSoftDeleted(Guid id);
 
         IQueryable<T> GetAll();
 
@@ -17,5 +17,7 @@ namespace VSATemplate.Features.Common.Repositories.GenericRepository.Base
         Task<bool> HardDelete(Guid id);
 
         Task<bool> SoftDelete(Guid id);
+
+        Task<bool> Rescue(Guid id);
     }
 }

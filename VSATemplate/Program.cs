@@ -25,11 +25,11 @@ builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
 builder.Services.AddMediatR(config => config.RegisterServicesFromAssembly(typeof(Program).Assembly));
 
-builder.Services.AddScoped<IValidator<CreateStudent.CreateCommand>, CreateStudent.Validator>();
-builder.Services.AddScoped<IValidator<HardDeleteStudent.HardDeleteCommand>,HardDeleteStudent.Validator>();
-builder.Services.AddScoped<IValidator<SoftDeleteStudent.SoftDeleteCommand>,SoftDeleteStudent.Validator>();
-builder.Services.AddScoped<IValidator<UpdateStudent.UpdateCommand>,UpdateStudent.Validator>();
-builder.Services.AddScoped<IValidator<string>,GetStudent.Validator>();
+builder.Services.AddScoped<IValidator<Create.CreateCommand>, Create.Validator>();
+builder.Services.AddScoped<IValidator<string>,HardDelete.Validator>();
+builder.Services.AddScoped<IValidator<string>,SoftDelete.Validator>();
+builder.Services.AddScoped<IValidator<Update.UpdateCommand>,Update.Validator>();
+builder.Services.AddScoped<IValidator<string>,Get.Validator>();
 
 // Add services to the container.
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
@@ -45,13 +45,13 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-CreateStudent.MapEndpoint(app);
-GetStudent.MapEndpoint(app);
-GetAllStudents.MapEnpoint(app);
-CreateFirstStudents.MapEndpoint(app);
-HardDeleteStudent.MapEnpoint(app);
-SoftDeleteStudent.MapEndpoint(app);
-UpdateStudent.MapEndpoint(app);
+Create.MapEndpoint(app);
+Get.MapEndpoint(app);
+GetAll.MapEnpoint(app);
+CreateFirsts.MapEndpoint(app);
+HardDelete.MapEnpoint(app);
+SoftDelete.MapEndpoint(app);
+Update.MapEndpoint(app);
 
 app.UseHttpsRedirection();
 
