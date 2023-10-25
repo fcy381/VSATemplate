@@ -9,9 +9,9 @@ namespace VSATemplate.Features.Students.Queries
 {
     public static class Get
     {
-        public class GetQuery : IRequest<GetDTO>
+        public class GetQuery : IRequest<IResult>
         {
-            public Guid Id { get; set; }
+            public Guid? Id { get; set; }
         }
 
         public class Validator : AbstractValidator<string> 
@@ -26,11 +26,12 @@ namespace VSATemplate.Features.Students.Queries
 
             private bool BeAValidGuid(string guid)
             {
-                return Guid.TryParse(guid.ToString(), out _);
+                if (guid is null) return false;
+                else return Guid.TryParse(guid.ToString(), out _);
             }
         }
 
-        internal sealed class Handler : IRequestHandler<GetQuery, GetDTO>
+        internal sealed class Handler : IRequestHandler<GetQuery, IResult>
         {
             private readonly IUnitOfWork _unitOfWork;
             private readonly IMapper _mapper;
@@ -41,21 +42,21 @@ namespace VSATemplate.Features.Students.Queries
                 _unitOfWork = unitOFWork;
             }
 
-            public async Task<GetDTO> Handle(GetQuery request, CancellationToken cancellationToken)
+            public async Task<IResult> Handle(GetQuery request, CancellationToken cancellationToken)
             {
                 var student = await _unitOfWork.StudentRepository.GetById(request.Id);
 
                 if (student != null)
                 {
-                    return _mapper.Map<GetDTO>(student);
+                    return Results.Ok(_mapper.Map<GetDTO>(student));
                 }
-                else return null;
+                else return Results.NotFound();
             }
         }
 
         public static void MapEndpoint(this IEndpointRouteBuilder app)
         {
-            app.MapGet("/api/v1.0/student/{id}", async (string id, ISender sender, IValidator<string> validator) =>
+            app.MapGet("/api/v1.0/student/{id}", async (string? id, ISender sender, IValidator<string> validator) =>
             {                
                 var validationResult = validator.Validate(id);
 
@@ -64,10 +65,7 @@ namespace VSATemplate.Features.Students.Queries
                 {
                     var query = new GetQuery { Id = Guid.Parse(id) };
                 
-                    var studentGetDTO = await sender.Send(query);
-
-                    if (studentGetDTO == null) return Results.NotFound();
-                    else return Results.Ok(studentGetDTO);
+                    return await sender.Send(query);
                 }
             }).WithName("GetStudentById");
         }

@@ -16,8 +16,6 @@ namespace VSATemplate.Features.Common.Repositories.GenericRepository.Base
 
         Task<bool> HardDelete(Guid id);
 
-        Task<bool> SoftDelete(Guid id);
-
-        Task<bool> Rescue(Guid id);
+        Task<bool> SoftDelete(Guid id);     
     }
 }

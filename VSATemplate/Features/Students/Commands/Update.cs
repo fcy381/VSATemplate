@@ -21,14 +21,15 @@ namespace VSATemplate.Features.Students.Commands
                     .NotEmpty()
                     .NotNull()
                     .Must(BeAValidGuid).WithMessage("The given Id is not of type Guid.");                   
-                RuleFor(x => x.Name).NotEmpty().MaximumLength(10);
-                RuleFor(x => x.Email).NotEmpty().MaximumLength(5);
-                RuleFor(x => x.Phone).NotEmpty().MaximumLength(15);
+                RuleFor(x => x.Name).NotEmpty().MaximumLength(60);
+                RuleFor(x => x.Email).NotEmpty().MaximumLength(60);
+                RuleFor(x => x.Phone).NotEmpty().MaximumLength(12);
             }
 
-            private bool BeAValidGuid(string guid)
+            private bool BeAValidGuid(string? guid)
             {
-                return Guid.TryParse(guid.ToString(), out _);
+                if (guid is null) return false;                
+                else return Guid.TryParse(guid.ToString(), out _);
             }
         }
 
@@ -44,8 +45,8 @@ namespace VSATemplate.Features.Students.Commands
             }
 
             public async Task<IResult> Handle(UpdateCommand request, CancellationToken cancellationToken)
-            {
-                var student = await _unitOfWork.StudentRepository.GetById(request.Id);
+            {                
+                var student = await _unitOfWork.StudentRepository.GetById(Guid.Parse(request.Id));
 
                 if (student != null)
                 {
@@ -55,7 +56,7 @@ namespace VSATemplate.Features.Students.Commands
 
                     return Results.Ok();
                 }
-                else return Results.BadRequest();                
+                else return Results.NotFound();                
             }
         }
 
@@ -71,6 +72,5 @@ namespace VSATemplate.Features.Students.Commands
                 return await sender.Send(UpdateCommand);
             }).WithName("UpdateStudent");
         }
-
     }
 }

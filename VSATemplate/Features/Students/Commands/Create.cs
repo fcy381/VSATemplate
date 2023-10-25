@@ -4,6 +4,7 @@ using VSATemplate.Features.Common.Entities;
 using VSATemplate.Features.Students.Common.Contracts;
 using VSATemplate.Features.Common.Repositories.UnitOfWork.Base;
 using FluentValidation;
+using Microsoft.AspNetCore.Mvc;
 
 namespace VSATemplate.Features.Students.Commands
 {
@@ -15,8 +16,8 @@ namespace VSATemplate.Features.Students.Commands
         {
             public Validator()
             {
-                RuleFor(x => x.Name).NotEmpty().MaximumLength(30);
-                RuleFor(x => x.Email).NotEmpty().MaximumLength(30);
+                RuleFor(x => x.Name).NotEmpty().MaximumLength(60);
+                RuleFor(x => x.Email).NotEmpty().MaximumLength(60);
                 RuleFor(x => x.Phone).NotEmpty().MaximumLength(12);
             }
         }
@@ -48,7 +49,7 @@ namespace VSATemplate.Features.Students.Commands
 
         public static void MapEndpoint(this IEndpointRouteBuilder app)
         {
-            app.MapPost("/api/v1.0/student/", async (CreateCommand createCommand, ISender sender, IValidator<CreateCommand> validator) =>
+            app.MapPost("/api/v1.0/student", async ([FromBody] CreateCommand createCommand, ISender sender, IValidator<CreateCommand> validator) =>
             {
                 var validationResult = validator.Validate(createCommand);
 

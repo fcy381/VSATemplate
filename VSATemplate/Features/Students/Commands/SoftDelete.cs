@@ -9,7 +9,7 @@ namespace VSATemplate.Features.Students.Commands
 {
     public static class SoftDelete
     {
-        public class SoftDeleteCommand : IRequest
+        public class SoftDeleteCommand : IRequest<IResult>
         {
             public Guid Id { get; set; }
         }
@@ -24,13 +24,14 @@ namespace VSATemplate.Features.Students.Commands
                     .Must(BeAValidGuid).WithMessage("The given Id is not of type Guid.");
             }
 
-            private bool BeAValidGuid(string guid)
+            private bool BeAValidGuid(string? guid)
             {
-                return Guid.TryParse(guid.ToString(), out _);
+                if (guid is null) return false;
+                else return Guid.TryParse(guid.ToString(), out _);
             }
         }
 
-        internal sealed class Handler : IRequestHandler<SoftDeleteCommand>
+        internal sealed class Handler : IRequestHandler<SoftDeleteCommand, IResult>
         {
             private readonly IUnitOfWork _unitOfWork;
 
@@ -39,17 +40,19 @@ namespace VSATemplate.Features.Students.Commands
                 _unitOfWork = unitOfWork;
             }
 
-            public async Task Handle(SoftDeleteCommand command, CancellationToken cancellationToken)             
+            public async Task<IResult> Handle(SoftDeleteCommand command, CancellationToken cancellationToken)             
             {
                 await _unitOfWork.StudentRepository.SoftDelete(command.Id);
 
                 await _unitOfWork.Commit();
+
+                return Results.Ok();
             }          
         }
 
         public static void MapEndpoint(IEndpointRouteBuilder app) 
         {
-            app.MapDelete("api/v1.0/student/soft/{id}", (string id, ISender sender, IValidator<string> validator) => 
+            app.MapDelete("api/v1.0/student/soft/{id}", async (string? id, ISender sender, IValidator<string> validator) => 
             {
                 var validationResult = validator.Validate(id);
 
@@ -59,9 +62,7 @@ namespace VSATemplate.Features.Students.Commands
                 { 
                     var command = new SoftDeleteCommand { Id = Guid.Parse(id) };
 
-                    _ = sender.Send(command);
-
-                    return Results.Ok();
+                    return await sender.Send(command);                    
                 }
             }).WithName("SoftDeleteStudentById");
         }

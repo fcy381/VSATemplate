@@ -73,18 +73,5 @@ namespace VSATemplate.Features.Common.Repositories.GenericRepository
 
             return true;
         }
-
-        public async Task<bool> Rescue(Guid id)
-        {
-            T? entity = await GetById(id);
-
-            if (entity is null)
-                return false;
-
-            entity.IsDeleted = false;
-            entity.DeletedTimeUtc = DateTime.MinValue;
-
-            return true;
-        }
     }
 }

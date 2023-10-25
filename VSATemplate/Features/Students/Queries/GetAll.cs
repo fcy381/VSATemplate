@@ -26,24 +26,20 @@ namespace VSATemplate.Features.Students.Queries
             {
                 var listStudents = _unitOfWork.StudentRepository.GetAll();
 
+                var studentsListDTO = new List<GetDTO>();
+
                 if (listStudents != null)
                 {
-                    var studentsListDTO = new List<GetDTO>();
-
                     foreach (var stdt in listStudents)
                     {
-                        var studentGetDTO = new GetDTO();
-
-                        studentGetDTO = _mapper.Map<GetDTO>(stdt);
+                        GetDTO? studentGetDTO = _mapper.Map<GetDTO>(stdt);
 
                         studentsListDTO.Add(studentGetDTO);
-                    }
-
-                    return studentsListDTO;
+                    }                    
                 }
-                else return null;
-            }
 
+                return studentsListDTO;
+            }
         }
 
         public static void MapEnpoint(this IEndpointRouteBuilder app) 
