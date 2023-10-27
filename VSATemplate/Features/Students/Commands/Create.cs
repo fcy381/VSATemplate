@@ -9,7 +9,8 @@ using Microsoft.AspNetCore.Mvc;
 namespace VSATemplate.Features.Students.Commands
 {
     public static class Create
-    {
+    {        
+
         public class CreateCommand : PostDTO, IRequest<IResult> { }
 
         public class Validator: AbstractValidator<CreateCommand>
@@ -43,7 +44,7 @@ namespace VSATemplate.Features.Students.Commands
 
                 var studentCreated = _mapper.Map<GetDTO>(student);
 
-                return Results.CreatedAtRoute("GetStudentById", new { id = student.Id }, studentCreated);
+                return Results.CreatedAtRoute("GetStudentById", new { id = student.Id }, studentCreated);                 
             }
         }
 
