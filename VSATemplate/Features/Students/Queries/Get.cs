@@ -4,6 +4,8 @@ using VSATemplate.Features.Students.Common.Contracts;
 using VSATemplate.Features.Common.Repositories.UnitOfWork.Base;
 using System.Data;
 using FluentValidation;
+using Carter;
+using static VSATemplate.Features.Students.Queries.Get;
 
 namespace VSATemplate.Features.Students.Queries
 {
@@ -54,17 +56,37 @@ namespace VSATemplate.Features.Students.Queries
             }
         }
 
-        public static void MapEndpoint(this IEndpointRouteBuilder app)
+        
+
+        //public static void MapEndpoint(this IEndpointRouteBuilder app)
+        //{
+        //    app.MapGet("/api/v1.0/student/{id}", async (string? id, ISender sender, IValidator<string> validator) =>
+        //    {                
+        //        var validationResult = validator.Validate(id);
+
+        //        if (!validationResult.IsValid) return Results.ValidationProblem(validationResult.ToDictionary());
+        //        else
+        //        {
+        //            var query = new GetQuery { Id = Guid.Parse(id) };
+
+        //            return await sender.Send(query);
+        //        }
+        //    }).WithName("GetStudentById");
+        //}
+    }
+    public class GetStudentByIdEndpoint : ICarterModule
+    {
+        public void AddRoutes(IEndpointRouteBuilder app)
         {
             app.MapGet("/api/v1.0/student/{id}", async (string? id, ISender sender, IValidator<string> validator) =>
-            {                
+            {
                 var validationResult = validator.Validate(id);
 
                 if (!validationResult.IsValid) return Results.ValidationProblem(validationResult.ToDictionary());
                 else
                 {
                     var query = new GetQuery { Id = Guid.Parse(id) };
-                
+
                     return await sender.Send(query);
                 }
             }).WithName("GetStudentById");

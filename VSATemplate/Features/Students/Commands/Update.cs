@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Carter;
 using FluentValidation;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
@@ -6,6 +7,7 @@ using VSATemplate.Features.Common.Entities;
 using VSATemplate.Features.Common.Repositories.UnitOfWork;
 using VSATemplate.Features.Common.Repositories.UnitOfWork.Base;
 using VSATemplate.Features.Students.Common.Contracts;
+using static VSATemplate.Features.Students.Commands.Update;
 
 namespace VSATemplate.Features.Students.Commands
 {
@@ -60,15 +62,31 @@ namespace VSATemplate.Features.Students.Commands
             }
         }
 
-        public static void MapEndpoint(this IEndpointRouteBuilder app) 
+        //public static void MapEndpoint(this IEndpointRouteBuilder app) 
+        //{
+        //    app.MapPut("api/v1.0/student", async ([FromBody] UpdateCommand UpdateCommand, ISender sender, IValidator<UpdateCommand> validator) =>
+        //    {
+        //        var validationResult = validator.Validate(UpdateCommand);
+
+        //        if (!validationResult.IsValid)                
+        //            return Results.ValidationProblem(validationResult.ToDictionary());                
+                
+        //        return await sender.Send(UpdateCommand);
+        //    }).WithName("UpdateStudent");
+        //}
+    }
+
+    public class UpdateStudentEndpoint : ICarterModule
+    {
+        public void AddRoutes(IEndpointRouteBuilder app)
         {
             app.MapPut("api/v1.0/student", async ([FromBody] UpdateCommand UpdateCommand, ISender sender, IValidator<UpdateCommand> validator) =>
             {
                 var validationResult = validator.Validate(UpdateCommand);
 
-                if (!validationResult.IsValid)                
-                    return Results.ValidationProblem(validationResult.ToDictionary());                
-                
+                if (!validationResult.IsValid)
+                    return Results.ValidationProblem(validationResult.ToDictionary());
+
                 return await sender.Send(UpdateCommand);
             }).WithName("UpdateStudent");
         }

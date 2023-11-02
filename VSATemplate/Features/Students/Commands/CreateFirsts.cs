@@ -1,8 +1,10 @@
 ﻿using AutoMapper;
+using Carter;
 using MediatR;
 using VSATemplate.Features.Common.Entities;
 using VSATemplate.Features.Common.Repositories.UnitOfWork;
 using VSATemplate.Features.Common.Repositories.UnitOfWork.Base;
+using static VSATemplate.Features.Students.Commands.CreateFirsts;
 
 namespace VSATemplate.Features.Students.Commands
 {
@@ -41,9 +43,24 @@ namespace VSATemplate.Features.Students.Commands
             }
         }
 
-        public static void MapEndpoint(this IEndpointRouteBuilder app)
+        //public static void MapEndpoint(this IEndpointRouteBuilder app)
+        //{
+        //    app.MapPost("/api/v1.0/student/initialize", async (ISender sender) => 
+        //    {
+        //        var command = new CreateFirstCommand();
+
+        //        await sender.Send(command);
+
+        //        return Results.Ok();
+        //    }).WithName("CreateFirstStudents");
+        //}
+    }
+
+    public class CreateFirstStudentsEndpoint : ICarterModule
+    {
+        public void AddRoutes(IEndpointRouteBuilder app)
         {
-            app.MapPost("/api/v1.0/student/initialize", async (ISender sender) => 
+            app.MapPost("/api/v1.0/student/initialize", async (ISender sender) =>
             {
                 var command = new CreateFirstCommand();
 

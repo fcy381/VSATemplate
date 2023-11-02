@@ -1,4 +1,5 @@
-﻿using FluentValidation;
+﻿using Carter;
+using FluentValidation;
 using MediatR;
 using System.ComponentModel.DataAnnotations;
 using VSATemplate.Features.Common.Repositories.UnitOfWork;
@@ -51,23 +52,41 @@ namespace VSATemplate.Features.Students.Commands
             }
         }
 
-        public static void MapEnpoint(IEndpointRouteBuilder app) 
+        //public static void MapEnpoint(IEndpointRouteBuilder app) 
+        //{
+        //    app.MapDelete("api/v1.0/student/hard/{id}", async (string? id, ISender sender, IValidator<string> validator) =>
+        //    {                
+        //        var validationResult = validator.Validate(id);
+
+        //        if (!validationResult.IsValid)
+        //            return Results.ValidationProblem(validationResult.ToDictionary());
+        //        else 
+        //        {
+        //            var command = new SoftDeleteCommand { Id = Guid.Parse(id) };
+
+        //            return await sender.Send(command);                    
+        //        }                
+        //    }).WithName("HardDeleteStudentById");
+        //}
+    }
+
+    public class HardDeleteStudentByIdEndpoint : ICarterModule
+    {
+        public void AddRoutes(IEndpointRouteBuilder app)
         {
             app.MapDelete("api/v1.0/student/hard/{id}", async (string? id, ISender sender, IValidator<string> validator) =>
-            {                
+            {
                 var validationResult = validator.Validate(id);
 
                 if (!validationResult.IsValid)
                     return Results.ValidationProblem(validationResult.ToDictionary());
-                else 
+                else
                 {
                     var command = new SoftDeleteCommand { Id = Guid.Parse(id) };
 
-                    return await sender.Send(command);                    
-                }                
+                    return await sender.Send(command);
+                }
             }).WithName("HardDeleteStudentById");
-        
         }
-
     }
 }

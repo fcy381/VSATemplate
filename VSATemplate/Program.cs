@@ -13,9 +13,8 @@ using VSATemplate.Features.Teachers.Common.Repository;
 using FluentValidation;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.AspNetCore.Builder;
 using HealthChecks.UI.Client;
+using Carter;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -25,6 +24,8 @@ builder.Services.AddHealthChecks()
 builder.Services.AddHealthChecksUI().AddInMemoryStorage();
 
 builder.Services.AddDbContext<DataContext>(opt => opt.UseInMemoryDatabase("VSATemplate"));
+
+builder.Services.AddCarter();
 
 builder.Services.AddScoped<ICourseRepository, CourseRepository>();
 builder.Services.AddScoped<IStudentRepository, StudentRepository>();
@@ -59,6 +60,8 @@ app.UseHealthChecksUI(config =>
     config.UIPath = "/health-ui";
 });
 
+app.MapCarter();
+
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
@@ -66,13 +69,13 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-Create.MapEndpoint(app);
-Get.MapEndpoint(app);
-GetAll.MapEnpoint(app);
-CreateFirsts.MapEndpoint(app);
-HardDelete.MapEnpoint(app);
-SoftDelete.MapEndpoint(app);
-Update.MapEndpoint(app);
+//Create.MapEndpoint(app);
+////Get.MapEndpoint(app);
+//GetAll.MapEnpoint(app);
+//CreateFirsts.MapEndpoint(app);
+//HardDelete.MapEnpoint(app);
+//SoftDelete.MapEndpoint(app);
+//Update.MapEndpoint(app);
 
 app.UseHttpsRedirection();
 

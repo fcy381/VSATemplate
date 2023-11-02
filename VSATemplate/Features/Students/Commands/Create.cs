@@ -5,6 +5,8 @@ using VSATemplate.Features.Students.Common.Contracts;
 using VSATemplate.Features.Common.Repositories.UnitOfWork.Base;
 using FluentValidation;
 using Microsoft.AspNetCore.Mvc;
+using Carter;
+using static VSATemplate.Features.Students.Commands.Create;
 
 namespace VSATemplate.Features.Students.Commands
 {
@@ -48,16 +50,32 @@ namespace VSATemplate.Features.Students.Commands
             }
         }
 
-        public static void MapEndpoint(this IEndpointRouteBuilder app)
+        //public static void MapEndpoint(this IEndpointRouteBuilder app)
+        //{
+        //    app.MapPost("/api/v1.0/student", async ([FromBody] CreateCommand createCommand, ISender sender, IValidator<CreateCommand> validator) =>
+        //    {
+        //        var validationResult = validator.Validate(createCommand);
+
+        //        if (!validationResult.IsValid)                
+        //            return Results.ValidationProblem(validationResult.ToDictionary());
+                
+        //        return await sender.Send(createCommand);                
+        //    }).WithName("CreateStudent");
+        //}
+    }
+
+    public class CreateStudentEndpoint : ICarterModule
+    {
+        public void AddRoutes(IEndpointRouteBuilder app)
         {
             app.MapPost("/api/v1.0/student", async ([FromBody] CreateCommand createCommand, ISender sender, IValidator<CreateCommand> validator) =>
             {
                 var validationResult = validator.Validate(createCommand);
 
-                if (!validationResult.IsValid)                
+                if (!validationResult.IsValid)
                     return Results.ValidationProblem(validationResult.ToDictionary());
-                
-                return await sender.Send(createCommand);                
+
+                return await sender.Send(createCommand);
             }).WithName("CreateStudent");
         }
     }

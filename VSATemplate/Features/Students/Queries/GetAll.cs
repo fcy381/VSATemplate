@@ -1,9 +1,11 @@
 ﻿using AutoMapper;
+using Carter;
 using MediatR;
 using System.Runtime.CompilerServices;
 using VSATemplate.Features.Common.Entities;
 using VSATemplate.Features.Common.Repositories.UnitOfWork.Base;
 using VSATemplate.Features.Students.Common.Contracts;
+using static VSATemplate.Features.Students.Queries.GetAll;
 
 namespace VSATemplate.Features.Students.Queries
 {
@@ -42,17 +44,33 @@ namespace VSATemplate.Features.Students.Queries
             }
         }
 
-        public static void MapEnpoint(this IEndpointRouteBuilder app) 
+        //public static void MapEnpoint(this IEndpointRouteBuilder app) 
+        //{
+        //    app.MapGet("/api/v1.0/student/all", async (ISender sender) => 
+        //    { 
+        //        var query = new GetAllQuery();
+
+        //        var studentListDTO = await sender.Send(query);
+
+        //        if (studentListDTO == null) return Results.NoContent();
+        //        else return Results.Ok(studentListDTO);           
+        //    }).WithName("GetAllStudent"); 
+        //}
+    }
+
+    public class GetAllStudentEndpoint : ICarterModule
+    {
+        public void AddRoutes(IEndpointRouteBuilder app)
         {
-            app.MapGet("/api/v1.0/student/all", async (ISender sender) => 
-            { 
+            app.MapGet("/api/v1.0/student/all", async (ISender sender) =>
+            {
                 var query = new GetAllQuery();
 
                 var studentListDTO = await sender.Send(query);
 
                 if (studentListDTO == null) return Results.NoContent();
-                else return Results.Ok(studentListDTO);           
-            }).WithName("GetAllStudent"); 
+                else return Results.Ok(studentListDTO);
+            }).WithName("GetAllStudent");
         }
     }
 }

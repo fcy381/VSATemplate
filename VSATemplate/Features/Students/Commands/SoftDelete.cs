@@ -1,9 +1,11 @@
 ﻿using AutoMapper;
+using Carter;
 using FluentValidation;
 using MediatR;
 using System.Security.Cryptography.X509Certificates;
 using VSATemplate.Features.Common.Entities;
 using VSATemplate.Features.Common.Repositories.UnitOfWork.Base;
+using static VSATemplate.Features.Students.Commands.SoftDelete;
 
 namespace VSATemplate.Features.Students.Commands
 {
@@ -50,22 +52,41 @@ namespace VSATemplate.Features.Students.Commands
             }          
         }
 
-        public static void MapEndpoint(IEndpointRouteBuilder app) 
+        //public static void MapEndpoint(IEndpointRouteBuilder app) 
+        //{
+        //    app.MapDelete("api/v1.0/student/soft/{id}", async (string? id, ISender sender, IValidator<string> validator) => 
+        //    {
+        //        var validationResult = validator.Validate(id);
+
+        //        if (!validationResult.IsValid)
+        //            return Results.ValidationProblem(validationResult.ToDictionary());
+        //        else 
+        //        { 
+        //            var command = new SoftDeleteCommand { Id = Guid.Parse(id) };
+
+        //            return await sender.Send(command);                    
+        //        }
+        //    }).WithName("SoftDeleteStudentById");
+        //}        
+    }
+
+    public class SoftDeleteStudentById : ICarterModule
+    {
+        public void AddRoutes(IEndpointRouteBuilder app)
         {
-            app.MapDelete("api/v1.0/student/soft/{id}", async (string? id, ISender sender, IValidator<string> validator) => 
+            app.MapDelete("api/v1.0/student/soft/{id}", async (string? id, ISender sender, IValidator<string> validator) =>
             {
                 var validationResult = validator.Validate(id);
 
                 if (!validationResult.IsValid)
                     return Results.ValidationProblem(validationResult.ToDictionary());
-                else 
-                { 
+                else
+                {
                     var command = new SoftDeleteCommand { Id = Guid.Parse(id) };
 
-                    return await sender.Send(command);                    
+                    return await sender.Send(command);
                 }
             }).WithName("SoftDeleteStudentById");
         }
-        
     }
 }
