@@ -11,10 +11,18 @@ using VSATemplate.Features.Courses.Common.Repository;
 using VSATemplate.Features.Teachers.Common.Repository.Base;
 using VSATemplate.Features.Teachers.Common.Repository;
 using FluentValidation;
+using Microsoft.Extensions.Diagnostics.HealthChecks;
+using Microsoft.AspNetCore.Diagnostics.HealthChecks;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.AspNetCore.Builder;
+using HealthChecks.UI.Client;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddHealthChecks();
+builder.Services.AddHealthChecks()
+    .AddCheck("WebAPI", () => HealthCheckResult.Healthy("The WebAPI is working as expected."));
+
+builder.Services.AddHealthChecksUI().AddInMemoryStorage();
 
 builder.Services.AddDbContext<DataContext>(opt => opt.UseInMemoryDatabase("VSATemplate"));
 
@@ -40,7 +48,16 @@ builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
 
-app.MapHealthChecks("/health");
+app.MapHealthChecks("/health", new HealthCheckOptions()
+{
+    Predicate = _ => true,
+    ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse
+});
+
+app.UseHealthChecksUI(config =>
+{
+    config.UIPath = "/health-ui";
+});
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
