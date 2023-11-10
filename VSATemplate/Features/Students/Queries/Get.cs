@@ -46,7 +46,7 @@ namespace VSATemplate.Features.Students.Queries
 
             public async Task<IResult> Handle(GetQuery request, CancellationToken cancellationToken)
             {
-                var student = await _unitOfWork.StudentRepository.GetById(request.Id);
+                var student = await _unitOfWork.StudentRepository.GetByIdAsync(cancellationToken, request.Id);
 
                 if (student != null)
                 {

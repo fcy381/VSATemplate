@@ -44,7 +44,7 @@ namespace VSATemplate.Features.Students.Commands
 
             public async Task<IResult> Handle(HardDeleteCommand request, CancellationToken cancellationToken)
             {
-                await _unitOfWork.StudentRepository.HardDelete(request.Id);
+                await _unitOfWork.StudentRepository.HardDeleteAsync(request.Id, cancellationToken);
 
                 await _unitOfWork.Commit();
 

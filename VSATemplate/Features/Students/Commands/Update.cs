@@ -48,7 +48,7 @@ namespace VSATemplate.Features.Students.Commands
 
             public async Task<IResult> Handle(UpdateCommand request, CancellationToken cancellationToken)
             {                
-                var student = await _unitOfWork.StudentRepository.GetById(Guid.Parse(request.Id));
+                var student = await _unitOfWork.StudentRepository.GetByIdAsync(cancellationToken, Guid.Parse(request.Id));
 
                 if (student != null)
                 {

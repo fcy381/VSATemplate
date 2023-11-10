@@ -44,7 +44,7 @@ namespace VSATemplate.Features.Students.Commands
 
             public async Task<IResult> Handle(SoftDeleteCommand command, CancellationToken cancellationToken)             
             {
-                await _unitOfWork.StudentRepository.SoftDelete(command.Id);
+                await _unitOfWork.StudentRepository.SoftDeleteAsync(command.Id, cancellationToken);
 
                 await _unitOfWork.Commit();
 

@@ -26,7 +26,7 @@ namespace VSATemplate.Features.Students.Queries
 
             public async Task<List<GetDTO>> Handle(GetAllQuery request, CancellationToken cancellationToken)
             {
-                var listStudents = _unitOfWork.StudentRepository.GetAll();
+                var listStudents = _unitOfWork.StudentRepository.GetAllAsync(cancellationToken);
 
                 var studentsListDTO = new List<GetDTO>();
 

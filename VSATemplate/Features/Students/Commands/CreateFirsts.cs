@@ -29,7 +29,7 @@ namespace VSATemplate.Features.Students.Commands
                     Email = "sebastianmontemaggiore@gmail.com",
                     Phone = "291544512"
                 };
-                await _unitOfWork.StudentRepository.Create(firstStudent);               
+                await _unitOfWork.StudentRepository.CreateAsync(firstStudent, cancellationToken);               
 
                 var secondStudent = new Student
                 {
@@ -37,7 +37,7 @@ namespace VSATemplate.Features.Students.Commands
                     Email = "estebangonzalez@gmail.com",
                     Phone = "291544536"
                 };
-                await _unitOfWork.StudentRepository.Create(secondStudent);                
+                await _unitOfWork.StudentRepository.CreateAsync(secondStudent, cancellationToken);                
 
                 _ = await _unitOfWork.Commit();                
             }

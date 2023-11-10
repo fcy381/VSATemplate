@@ -12,7 +12,6 @@ namespace VSATemplate.Features.Students.Commands
 {
     public static class Create
     {        
-
         public class CreateCommand : PostDTO, IRequest<IResult> { }
 
         public class Validator: AbstractValidator<CreateCommand>
@@ -40,7 +39,7 @@ namespace VSATemplate.Features.Students.Commands
             {
                 var student = _mapper.Map<Student>(request);
 
-                await _unitOfWork.StudentRepository.Create(student);
+                await _unitOfWork.StudentRepository.CreateAsync(student, cancellationToken);
                 
                 await _unitOfWork.Commit();
 
